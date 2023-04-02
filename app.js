@@ -32,7 +32,7 @@ const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
 // 3.3 Configure passport to use the GitHub strategy.
 passport.use(new GitHubStrategy({
-  clientId: GITHUB_CLIENT_ID,
+  clientID: GITHUB_CLIENT_ID,
   clientSecret: GITHUB_CLIENT_SECRET,
   callbackURL: "http://localhost:3000/auth/github/callback"
 }, 
@@ -65,6 +65,8 @@ app.use(partials());
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
 
+// 3.5 Initialize Passport
+app.use(passport.initialize());
 // 3.6 Configure app to use Passport Session.
 app.use(passport.session());
 
@@ -75,9 +77,16 @@ app.use(session({
   saveUninitialized: false
 }))
 
-// 3.5 Initialize Passport
-app.use(passport.initialize());
+/*
+ * ensureAuthenticated Callback Function
+*/
 
+// 5.4 Define the ensureAuthenticated() function to handle verifying if a request is authenticated.
+const ensureAuthenticated = function (req, res, next) {
+  if (req.isAuthenticated()) {
+    next();
+  } res.redirect('/login');
+}
 
 /*
  * Routes
@@ -119,13 +128,3 @@ app.get('/auth/github/callback', passport.authenticate('github', {
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
-/*
- * ensureAuthenticated Callback Function
-*/
-
-// 5.4 Define the ensureAuthenticated() function to handle verifying if a request is authenticated.
-const ensureAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    next();
-  } res.redirect('/login');
-}
