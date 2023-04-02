@@ -35,11 +35,11 @@ passport.use(new GitHubStrategy({
   clientID: GITHUB_CLIENT_ID,
   clientSecret: GITHUB_CLIENT_SECRET,
   callbackURL: "http://localhost:3000/auth/github/callback"
-}, 
-// 3.4 Passport strategies require a verify callback function, which is used to find the user. As a second argunmet of the initialization of the GitHubStrategy instance.
-   function (accessToken, rereshToken, profile, done) {
-  return done(null, profile)
-})
+},
+  // 3.4 Passport strategies require a verify callback function, which is used to find the user. As a second argunmet of the initialization of the GitHubStrategy instance.
+  function (accessToken, rereshToken, profile, done) {
+    return done(null, profile)
+  })
 )
 
 // 4.1 To facilitate login sessions, Passport serializes and deserializes user instances to and from the session. It can be done by serializing the complete GitHub profile.
